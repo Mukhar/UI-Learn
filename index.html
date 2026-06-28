@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>React UI Worksheets — Mukhar's Interview Prep</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="./shared.js" defer></script>
+  <!-- Module files: each pushes onto window.MODULES. Add a new file here to add a module. -->
+  <script src="./modules/01-js-fundamentals.js" defer></script>
+  <script src="./modules/02-js-interview.js" defer></script>
+  <script src="./modules/03-react-basics.js" defer></script>
+  <script src="./modules/04-hooks-state.js" defer></script>
+  <script src="./modules/05-hooks-deep.js" defer></script>
+  <script src="./modules/06-patterns.js" defer></script>
+  <script src="./modules/07-performance.js" defer></script>
+  <script src="./modules/08-routing-forms.js" defer></script>
+  <script src="./modules/09-state-mgmt.js" defer></script>
+  <script src="./modules/10-testing-bp.js" defer></script>
+  <script src="./app.js" defer></script>
+  <script src="./quiz.js" defer></script>
+  <style>
+    .pill { @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium; }
+    .scroll-pretty::-webkit-scrollbar { width: 8px; }
+    .scroll-pretty::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+    details > summary { list-style: none; cursor: pointer; }
+    details > summary::-webkit-details-marker { display: none; }
+    .prose-code code {
+      background: #f1f5f9; padding: 2px 6px; border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em;
+    }
+    .prose-code pre code { background: transparent; padding: 0; }
+    .prose-code pre {
+      background: #0f172a; color: #e2e8f0; padding: 14px 16px; border-radius: 8px;
+      overflow-x: auto; font-size: 13px; line-height: 1.5;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">React UI Worksheets</h1>
+        <p class="text-xs text-slate-500">Basics → Interview level · self-evaluated · progress saved locally</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <div id="overallProgress" class="text-sm text-slate-700"></div>
+        <button id="quizModeBtn" class="text-xs px-3 py-1.5 rounded-md bg-sky-600 hover:bg-sky-700 text-white border border-sky-700 font-semibold">
+          Quiz mode
+        </button>
+        <button id="resetBtn" class="text-xs px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-200">
+          Reset progress
+        </button>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 pb-3">
+      <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+        <div id="overallBar" class="bg-emerald-500 h-2 transition-all" style="width:0%"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-6 grid grid-cols-12 gap-6">
+    <!-- Sidebar: modules -->
+    <aside class="col-span-12 md:col-span-3">
+      <div class="bg-white rounded-lg border border-slate-200 p-3 sticky top-32">
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-500 px-2 mb-2">Modules</h2>
+        <nav id="moduleNav" class="space-y-1 max-h-[70vh] overflow-y-auto scroll-pretty"></nav>
+      </div>
+    </aside>
+
+    <!-- Questions -->
+    <section class="col-span-12 md:col-span-9 space-y-4" id="questionsArea"></section>
+  </main>
+
+  <!-- Quiz Mode overlay -->
+  <div id="quizOverlay" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto">
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+      <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+        <div>
+          <h1 class="text-xl font-bold text-slate-900">Quiz Mode</h1>
+          <p class="text-xs text-slate-500">Randomized practice run with timer + scoring</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="quizTimer" class="hidden font-mono text-sm font-semibold text-slate-700 bg-slate-100 px-3 py-1 rounded-md border border-slate-200">0s</span>
+          <button id="exitQuizBtn" class="text-xs px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-200">
+            Exit quiz
+          </button>
+        </div>
+      </div>
+    </header>
+    <main id="quizContent" class="max-w-4xl mx-auto px-6 py-6"></main>
+  </div>
+
+  <footer class="max-w-7xl mx-auto px-6 py-8 text-xs text-slate-400 text-center">
+    Built by huppy  · Click "Reveal evaluator" after attempting each question · Mark yourself honestly, future-you is watching.
+  </footer>
+</body>
+</html>

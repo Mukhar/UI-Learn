@@ -1,0 +1,110 @@
+// Hooks & State — useState, useEffect, useRef, and the gang.
+window.MODULES = window.MODULES || [];
+window.MODULES.push({
+  id: "hooks-state",
+  title: "Hooks & State",
+  blurb: "useState, useEffect, useRef, and the gang.",
+  questions: [
+    {
+      id: "hs-1",
+      difficulty: "easy",
+      q: "What are the Rules of Hooks and WHY do they exist?",
+      hint: "Order of calls.",
+      answer: `Rules: (1) Only call hooks at the top level — never inside loops, conditions, or nested functions. (2) Only call hooks from React function components or custom hooks. React tracks hook state by CALL ORDER per component, not by name. If you conditionally skip a hook, the order shifts and React associates state with the wrong hook -> corrupted state. ESLint plugin \`eslint-plugin-react-hooks\` enforces both rules.`,
+      keyPoints: [
+        "Top-level only",
+        "Functions/custom hooks only",
+        "Reason: order-based bookkeeping",
+        "eslint-plugin-react-hooks mentioned",
+      ],
+    },
+    {
+      id: "hs-2",
+      difficulty: "easy",
+      q: "Explain `useState`'s functional updater form. Why prefer it sometimes?",
+      hint: "Stale state in batched updates.",
+      answer: `\`setCount(prev => prev + 1)\` receives the latest committed state, so multiple updates in the same tick compose correctly: calling \`setCount(c => c+1)\` three times yields +3. The direct form \`setCount(count + 1)\` captures whatever \`count\` was when the closure was created — risky inside intervals, async callbacks, or successive updates.`,
+      keyPoints: [
+        "Functional updater uses latest state",
+        "Avoids stale-closure bugs",
+        "Composes correctly across batched updates",
+      ],
+    },
+    {
+      id: "hs-3",
+      difficulty: "medium",
+      q: "Walk me through `useEffect`'s lifecycle. What does the cleanup function do and when does it run?",
+      hint: "Run after commit, cleanup before re-run / unmount.",
+      answer: `\`useEffect\` runs the effect AFTER the browser paints the committed DOM. The optional return value is a cleanup function that runs (a) right before the effect re-runs because deps changed, and (b) when the component unmounts. Use it to cancel subscriptions, clear timers, abort fetches. Empty deps \`[]\` = run once on mount, cleanup on unmount. No deps array = run after every render (almost always a bug).`,
+      keyPoints: [
+        "Runs after commit/paint",
+        "Cleanup runs before re-run AND on unmount",
+        "Deps array semantics: [], [x], no array",
+        "Use-cases: subs, timers, fetch abort",
+      ],
+    },
+    {
+      id: "hs-4",
+      difficulty: "medium",
+      q: "What's the difference between `useMemo` and `useCallback`? When does each actually help?",
+      hint: "Memoize a value vs a function reference.",
+      answer: `\`useMemo(fn, deps)\` memoizes the RETURN VALUE of \`fn\`. \`useCallback(fn, deps)\` is equivalent to \`useMemo(() => fn, deps)\` — it memoizes the FUNCTION REFERENCE itself. They help when (a) the computation is genuinely expensive, or (b) the value/function is passed to a memoized child / a \`useEffect\` dep array, where referential equality matters. Wrapping every function in \`useCallback\` is premature optimization and adds memory + dep-tracking overhead.`,
+      keyPoints: [
+        "Memo = value, Callback = function ref",
+        "useCallback === useMemo returning a fn",
+        "Justified for memoized children or effect deps",
+        "Warning: not free, don't blanket-apply",
+      ],
+    },
+    {
+      id: "hs-5",
+      difficulty: "medium",
+      q: "Give two distinct use-cases for `useRef`.",
+      hint: "DOM access + mutable instance variable.",
+      answer: `(1) **DOM access**: attach \`ref={inputRef}\` to imperatively focus, scroll, or measure an element. (2) **Mutable instance variable**: hold values that persist across renders without causing re-renders when changed — e.g., a previous-value tracker, a setInterval id, a flag that says "first render". Crucially, mutating \`ref.current\` does NOT trigger a re-render; if you need the UI to react, use state instead.`,
+      keyPoints: [
+        "DOM ref example",
+        "Mutable holder that doesn't trigger renders",
+        "Explicitly states: no re-render on mutation",
+      ],
+    },
+    {
+      id: "hs-6",
+      difficulty: "medium",
+      q: "When would you reach for `useReducer` over `useState`?",
+      hint: "Complex state transitions / many actions.",
+      answer: `Use \`useReducer\` when (a) state is an object with multiple interdependent fields, (b) the next state depends on the previous one in non-trivial ways, (c) you have many action types (e.g., a form wizard, undo stack, complex toggle logic), or (d) you want to decouple update logic from the component for testability. It centralizes transitions in a pure reducer and pairs nicely with Context to make a lightweight Redux substitute.`,
+      keyPoints: [
+        "Complex/interdependent state",
+        "Many action types",
+        "Pure reducer = testable",
+        "Pairs with Context for global state",
+      ],
+    },
+    {
+      id: "hs-7",
+      difficulty: "hard",
+      q: "What does this code log, and why? Then fix it.\n```jsx\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  useEffect(() => {\n    const id = setInterval(() => setCount(count + 1), 1000);\n    return () => clearInterval(id);\n  }, []);\n  return <div>{count}</div>;\n}\n```",
+      hint: "Stale closure over `count`.",
+      answer: `Output: the counter ticks to 1 and then **stays at 1**. The empty deps array means the effect runs once; the interval callback closes over the initial \`count\` (0) forever, so every tick calls \`setCount(0 + 1)\`.\n\n**Fix** with functional updater:\n\`\`\`jsx\nsetInterval(() => setCount(c => c + 1), 1000);\n\`\`\`\nOr keep \`count\` in deps (but then the interval is recreated every second — wasteful). A ref-based approach also works.`,
+      keyPoints: [
+        "Identifies stale closure",
+        "Explains why it stays at 1",
+        "Functional updater fix",
+        "Mentions deps-based fix tradeoff",
+      ],
+    },
+    {
+      id: "hs-8",
+      difficulty: "hard",
+      q: "Write a custom hook `useDebouncedValue(value, delay)` and explain when it's useful.",
+      hint: "useState + useEffect + cleanup.",
+      answer: `\`\`\`js\nfunction useDebouncedValue(value, delay = 300) {\n  const [debounced, setDebounced] = useState(value);\n  useEffect(() => {\n    const id = setTimeout(() => setDebounced(value), delay);\n    return () => clearTimeout(id);\n  }, [value, delay]);\n  return debounced;\n}\n\`\`\`\nEvery time \`value\` changes, the previous timer is cleared and a new one is scheduled. The returned \`debounced\` value only updates after \`delay\` ms of stability. Use cases: search-as-you-type API calls, expensive filter/sort recomputation, resize handlers.`,
+      keyPoints: [
+        "Correct useState + useEffect with cleanup",
+        "Deps include value AND delay",
+        "Explains real use case (search input, etc.)",
+      ],
+    },
+  ],
+});
