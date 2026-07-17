@@ -24,7 +24,7 @@ from a CDN. Progress lives in `localStorage` keyed to that file's origin.
 
 ## What's in the box
 
-**10 modules, 60 questions**, mixed difficulty (easy / medium / hard):
+**13 modules, 96 questions**, mixed difficulty (easy / medium / hard):
 
 | # | Module | Qs | What it covers |
 |---|---|---|---|
@@ -38,6 +38,9 @@ from a CDN. Progress lives in `localStorage` keyed to that file's origin.
 | 8 | Routing & Forms | 4 | React Router v6 params, CSR vs SSR, controlled forms with a11y, protected routes |
 | 9 | Global State Management | 3 | Context limits, Redux Toolkit, server vs client state |
 | 10 | Testing & Best Practices | 5 | RTL philosophy, sample test, a11y checklist, blank-screen debugging, hydration |
+| 11 | Modern React (18 & 19) | 12 | Concurrent renderer, automatic batching, `startTransition`, `use()` hook, RSC vs SSR, `'use client'`/`'use server'`, Actions + `useActionState` + `useFormStatus`, `useOptimistic`, streaming SSR + selective hydration, React Compiler, hydration mismatch causes |
+| 12 | TypeScript + React | 12 | `interface` vs `type`, children typing, event handler types, `useState`/`useRef`/`useReducer` typing, generic components, `as const`, utility types, discriminated unions for state, `forwardRef` + `useImperativeHandle`, polymorphic `as` prop |
+| 13 | Next.js / SSR / RSC | 12 | Rendering strategies, App vs Pages Router, extended `fetch` caching, ISR + `revalidateTag`, Server Actions vs Route Handlers, `generateStaticParams`, `next/image`, `<Link>` prefetching, file conventions (`page`/`layout`/`loading`/`error`), dynamic rendering triggers, `dynamic({ ssr: false })`, Edge middleware |
 
 ---
 
@@ -133,6 +136,9 @@ UILearn/
     08-routing-forms.js
     09-state-mgmt.js
     10-testing-bp.js
+    11-modern-react.js
+    12-typescript-react.js
+    13-nextjs-ssr.js
 ```
 
 Each module file is self-contained. The pattern is:
@@ -197,8 +203,9 @@ Open the relevant `modules/*.js` file and append a new object to the
 
 - [x] Quiz mode: 5/10/20/All random questions, timer, score at the end
 - [ ] Export progress as JSON / import on another device
-- [ ] Module: TypeScript + React (generics, discriminated unions, `as const`)
-- [ ] Module: Next.js / SSR / Server Components
+- [x] Module: Modern React (18/19) — concurrent, Suspense/data, RSC, Actions, `use()`, `useOptimistic`, Compiler
+- [x] Module: TypeScript + React — generics, discriminated unions, `as const`, hook typing, polymorphic components
+- [x] Module: Next.js / SSR / Server Components — App Router, fetch caching, ISR, Actions, dynamic rendering, middleware
 - [ ] Module: System design (design a Tweet feed, infinite scroll, autocomplete)
 - [ ] Module: CSS / responsive / a11y deep dive
 - [ ] Spaced repetition: re-surface Missed / Partial answers after N days
